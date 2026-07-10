@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<nav>
+  <a class="brand" href="{{ url_for('forum') }}">COSC2980 Forum</a>
+</nav>
+<div class="container">
+  <div class="card">
+    <h2 style="margin-top:0;">Edit Post</h2>
+    <form method="post" enctype="multipart/form-data">
+      <label>Subject</label>
+      <input type="text" name="subject" value="{{ post['subject'] }}" required>
+      <label>Message</label>
+      <textarea name="message" required>{{ post['message'] }}</textarea>
+      {% if post['image_url'] %}<img class="post-image" src="{{ post['image_url'] }}" style="max-width:200px;">{% endif %}
+      <label>New image (optional)</label>
+      <input type="file" name="image">
+      <button class="btn" type="submit">Update</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container">
+  <div class="card auth-card">
+    <h1>Sign Up</h1>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post" enctype="multipart/form-data">
+      <label>ID</label>
+      <input type="text" name="id" required>
+      <label>Username</label>
+      <input type="text" name="user_name" required>
+      <label>Password</label>
+      <input type="password" name="password" required>
+      <label>Profile image</label>
+      <input type="file" name="image" required>
+      <button class="btn" type="submit">Sign Up</button>
+    </form>
+    <p class="auth-footer"><a class="btn-link" href="{{ url_for('login') }}">Back to login</a></p>
+  </div>
+</div>
+{% endblock %}

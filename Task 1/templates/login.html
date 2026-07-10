@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container">
+  <div class="card auth-card">
+    <h1>COSC2980 Forum</h1>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post">
+      <label>ID</label>
+      <input type="text" name="id" required>
+      <label>Password</label>
+      <input type="password" name="password" required>
+      <button class="btn" type="submit">Log In</button>
+    </form>
+    <p class="auth-footer">New here? <a class="btn-link" href="{{ url_for('signup') }}">Sign up</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+indexes:
+- kind: post
+  properties:
+  - name: author_id
+  - name: created_at
+    direction: desc

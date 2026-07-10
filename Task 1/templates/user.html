@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block body %}
+<nav>
+  <a class="brand" href="{{ url_for('forum') }}">COSC2980 Forum</a>
+  <div class="nav-right">
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card" style="text-align:center;">
+    <img class="avatar-lg" src="{{ profile_user['image_url'] }}"><br>
+    <h2 style="margin:10px 0 0;">{{ profile_user['user_name'] }}</h2>
+  </div>
+
+  {% if is_owner %}
+  <div class="card">
+    <h3 style="margin-top:0;">Change password</h3>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="post" action="{{ url_for('change_password', user_id=profile_user['id']) }}">
+      <label>Old password</label>
+      <input type="password" name="old_password" required>
+      <label>New password</label>
+      <input type="password" name="new_password" required>
+      <button class="btn" type="submit">Update Password</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <h3>{{ "My Posts" if is_owner else "Posts" }}</h3>
+  {% for post in posts %}
+  <div class="card post">
+    <div class="post-meta">{{ post['created_at'].strftime('%Y-%m-%d %H:%M') }}</div>
+    <h3 style="margin-top:4px;">{{ post['subject'] }}</h3>
+    {% if is_owner %}
+    <a class="btn-link" href="{{ url_for('edit_post', user_id=profile_user['id'], post_id=post.key.id) }}">Edit</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

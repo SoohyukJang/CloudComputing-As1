@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>COSC2980 Assignment 1 - Task 2: Trade Data (BigQuery)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
+    h1 { font-size: 1.4rem; }
+    h2 { margin-top: 2.5rem; font-size: 1.1rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 0.9rem; }
+    th { background: #f2f2f2; }
+    tr:nth-child(even) { background: #fafafa; }
+  </style>
+</head>
+<body>
+  <h1>COSC2980 Assignment 1 - Task 2: Trade Data Analysis (BigQuery)</h1>
+
+  <h2>Q1: Top 10 time periods by total trade value (imports + exports)</h2>
+  <table>
+    <tr><th>time_ref</th><th>trade_value</th></tr>
+    {% for row in q1_rows %}
+    <tr><td>{{ row.time_ref }}</td><td>{{ "%.2f"|format(row.trade_value) }}</td></tr>
+    {% endfor %}
+  </table>
+
+  <h2>Q2: Top 40 countries by trade deficit (2013-2015, status = F)</h2>
+  <table>
+    <tr><th>country_label</th><th>product_type</th><th>trade_deficit_value</th><th>status</th></tr>
+    {% for row in q2_rows %}
+    <tr>
+      <td>{{ row.country_label }}</td>
+      <td>{{ row.product_type }}</td>
+      <td>{{ "%.2f"|format(row.trade_deficit_value) }}</td>
+      <td>{{ row.status }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2>Q3: Top 25 services by trade surplus (Q1 periods &cap; Q2 countries)</h2>
+  <table>
+    <tr><th>service_label</th><th>trade_surplus_value</th></tr>
+    {% for row in q3_rows %}
+    <tr><td>{{ row.service_label }}</td><td>{{ "%.2f"|format(row.trade_surplus_value) }}</td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
