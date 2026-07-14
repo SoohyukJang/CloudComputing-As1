@@ -1,3 +1,8 @@
 venv/
 __pycache__/
 *.pyc
+
+# AI planning docs / tool artifacts - not part of the submitted project
+PRODUCT.md
+DESIGN.md
+.impeccable/

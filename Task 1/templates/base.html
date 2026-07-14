@@ -3,21 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}COSC2980 Forum{% endblock %}</title>
+<title>{% block title %}COSC2980 Group 7 Forum{% endblock %}</title>
 <style>
   :root {
-    --orange: #ff4500;
-    --orange-dark: #e03d00;
-    --bg: #dae0e6;
-    --card: #ffffff;
-    --border: #ccc;
-    --text: #1c1c1c;
-    --muted: #787c7e;
+    --bg: #1e1e1e;
+    --card: #252526;
+    --border: #3c3c3c;
+    --accent: #58a6ff;
+    --accent-deep: #1f6feb;
+    --text: #d4d4d4;
+    --muted: #8b949e;
+    --error: #f85149;
+    --mono: ui-monospace, SFMono-Regular, Consolas, "JetBrains Mono", "Cascadia Code", monospace;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--sans);
     background: var(--bg);
     color: var(--text);
   }
@@ -31,38 +34,47 @@
     position: sticky;
     top: 0;
   }
-  nav .brand { font-weight: 700; font-size: 18px; color: var(--orange); text-decoration: none; }
+  nav .brand { font-family: var(--mono); font-weight: 700; font-size: 16px; color: var(--accent); text-decoration: none; }
   nav .nav-right { display: flex; align-items: center; gap: 16px; }
   nav .nav-right a { display: flex; align-items: center; gap: 8px; }
-  nav a { color: var(--text); text-decoration: none; font-size: 14px; }
-  nav a:hover { text-decoration: underline; }
+  nav a { font-family: var(--mono); color: var(--muted); text-decoration: none; font-size: 12px; letter-spacing: 0.02em; }
+  nav a:hover { color: var(--text); text-decoration: underline; }
   .container { max-width: 640px; margin: 24px auto; padding: 0 16px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-bottom: 14px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px; margin-bottom: 14px; }
   .avatar-sm { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
   .avatar-lg { width: 64px; height: 64px; max-width: 120px; max-height: 120px; border-radius: 50%; object-fit: cover; }
-  .post-meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .post-meta { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; color: var(--muted); }
   .post-meta a { color: var(--muted); font-weight: 600; }
-  .post h3 { margin: 6px 0 4px; font-size: 18px; }
-  .post p.message { margin: 4px 0; font-size: 14px; white-space: pre-wrap; }
-  .post-image { max-width: 100%; border-radius: 4px; margin-top: 8px; display: block; }
-  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; margin-top: 12px; }
+  .post-meta a:hover { color: var(--text); }
+  .post h3 { font-family: var(--mono); font-weight: 700; margin: 6px 0 4px; font-size: 18px; color: var(--text); }
+  .post p.message { margin: 4px 0; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+  .post-image { max-width: 100%; border: 1px solid var(--border); border-radius: 2px; margin-top: 8px; display: block; }
+  label { display: block; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.02em; margin-bottom: 4px; margin-top: 12px; }
   input[type=text], input[type=password], input[type=file], textarea {
-    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 4px;
+    width: 100%; padding: 8px 10px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 2px;
     font-size: 14px; font-family: inherit;
   }
-  input:focus, textarea:focus { outline: 2px solid var(--orange); border-color: var(--orange); }
+  input[type=text]:focus, input[type=password]:focus, textarea:focus {
+    outline: none; border-color: var(--accent);
+  }
+  input[type=file] { color: var(--muted); }
   textarea { min-height: 90px; resize: vertical; }
   .btn {
-    display: inline-block; background: var(--orange); color: #fff; border: none;
-    padding: 8px 22px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px;
+    display: inline-block; background: var(--accent); color: var(--bg); border: none;
+    padding: 8px 20px; border-radius: 2px; font-family: var(--mono); font-weight: 600; font-size: 14px;
+    cursor: pointer; margin-top: 14px;
+    transition: background 0.15s cubic-bezier(0.4,0,0.2,1), color 0.15s cubic-bezier(0.4,0,0.2,1);
   }
-  .btn:hover { background: var(--orange-dark); }
-  .btn-link { color: var(--orange); text-decoration: none; font-weight: 600; font-size: 14px; }
-  .error { background: #fdecea; color: #c0392b; padding: 8px 12px; border-radius: 4px; font-size: 13px; margin-bottom: 12px; }
+  .btn:hover { background: var(--accent-deep); color: #ffffff; }
+  .btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+  .btn-link { color: var(--accent); text-decoration: none; font-family: var(--mono); font-weight: 600; font-size: 12px; }
+  .btn-link:hover { text-decoration: underline; }
+  .error { background: rgba(248, 81, 73, 0.1); color: var(--error); padding: 8px 12px; border-radius: 2px; font-size: 13px; margin-bottom: 12px; }
   .auth-card { max-width: 360px; margin: 60px auto; }
-  .auth-card h1 { text-align: center; color: var(--orange); font-size: 22px; margin-bottom: 20px; }
+  .auth-card h1 { font-family: var(--mono); text-align: center; color: var(--accent); font-size: 20px; letter-spacing: -0.01em; margin-bottom: 20px; }
   .auth-card .btn { width: 100%; text-align: center; }
-  .auth-footer { text-align: center; margin-top: 16px; font-size: 13px; }
+  .auth-footer { text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted); }
 </style>
 </head>
 <body>
