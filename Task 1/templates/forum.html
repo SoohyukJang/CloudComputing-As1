@@ -19,7 +19,7 @@
       <textarea name="message" required></textarea>
       <label>Image (optional)</label>
       <input type="file" name="image">
-      <button class="btn" type="submit">Submit</button>
+      <button class="btn" type="submit">Post message</button>
     </form>
   </div>
 
@@ -34,6 +34,8 @@
     <p class="message">{{ post['message'] }}</p>
     {% if post['image_url'] %}<img class="post-image" src="{{ post['image_url'] }}">{% endif %}
   </div>
+  {% else %}
+  <div class="card empty-state">No posts yet — be the first to post.</div>
   {% endfor %}
 </div>
 {% endblock %}

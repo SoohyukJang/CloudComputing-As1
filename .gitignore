@@ -6,3 +6,6 @@ __pycache__/
 PRODUCT.md
 DESIGN.md
 .impeccable/
+.agents/
+.claude/
+skills-lock.json
