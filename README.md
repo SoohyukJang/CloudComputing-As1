@@ -9,4 +9,4 @@
 https://rmit-cloud-2026.as.r.appspot.com
 
 ## Task 2 - Trade Data Analysis (Flask + BigQuery)
-https://project-a899d2ee-9a1f-43f4-9dc.as.r.appspot.com
+https://rmit-cloud-2026-t2.ts.r.appspot.com/
