@@ -7,16 +7,15 @@ from google.cloud import bigquery
 app = Flask(__name__)
 client = bigquery.Client()
 
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080, debug=True)
-
 # ---------------------------------------------------------------------------
 # Dataset configuration.
 # The three CSVs from a1.zip must be loaded into this dataset as tables named:
 #   gsquarterlySeptember20, services_classification, country_classification
 # Set DATASET to "project.dataset" (or just "dataset" if same project).
+# Deployed separately from Task 1 (which lives in rmit-cloud-2026) so the two
+# App Engine apps don't overwrite each other's "default" service.
 # ---------------------------------------------------------------------------
-DATASET = "rmit-cloud-2026.a1"  # project.dataset
+DATASET = "project-a899d2ee-9a1f-43f4-9dc.trade_data"  # project.dataset
 
 TRADE = f"`{DATASET}.gsquarterlySeptember20`"
 COUNTRY = f"`{DATASET}.country_classification`"
@@ -24,11 +23,11 @@ SERVICE = f"`{DATASET}.services_classification`"  # join key column is `code`
 
 
 # Q1: Top 10 time slots (year+month) by total trade value (imports + exports).
-# time_ref in this dataset is a YYYYMM integer.
+# time_ref in this dataset is a YYYYMM string; value is a string too, hence SAFE_CAST.
 Q1 = f"""
 SELECT
   time_ref,
-  SUM(value) AS trade_value
+  SUM(SAFE_CAST(value AS FLOAT64)) AS trade_value
 FROM {TRADE}
 WHERE account IN ('Imports', 'Exports')
 GROUP BY time_ref
@@ -42,8 +41,8 @@ Q2 = f"""
 SELECT
   c.country_label AS country_label,
   t.product_type  AS product_type,
-  SUM(CASE WHEN t.account = 'Imports' THEN t.value ELSE 0 END)
-    - SUM(CASE WHEN t.account = 'Exports' THEN t.value ELSE 0 END) AS trade_deficit_value,
+  SUM(CASE WHEN t.account = 'Imports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END)
+    - SUM(CASE WHEN t.account = 'Exports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END) AS trade_deficit_value,
   t.status AS status
 FROM {TRADE} t
 JOIN {COUNTRY} c
@@ -64,7 +63,7 @@ WITH top_periods AS (
   FROM {TRADE}
   WHERE account IN ('Imports', 'Exports')
   GROUP BY time_ref
-  ORDER BY SUM(value) DESC
+  ORDER BY SUM(SAFE_CAST(value AS FLOAT64)) DESC
   LIMIT 10
 ),
 top_countries AS (
@@ -76,14 +75,14 @@ top_countries AS (
     AND CAST(SUBSTR(CAST(t.time_ref AS STRING), 1, 4) AS INT64) BETWEEN 2013 AND 2015
   GROUP BY c.country_code
   ORDER BY
-    SUM(CASE WHEN t.account = 'Imports' THEN t.value ELSE 0 END)
-    - SUM(CASE WHEN t.account = 'Exports' THEN t.value ELSE 0 END) DESC
+    SUM(CASE WHEN t.account = 'Imports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END)
+    - SUM(CASE WHEN t.account = 'Exports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END) DESC
   LIMIT 40
 )
 SELECT
   s.service_label AS service_label,
-  SUM(CASE WHEN t.account = 'Exports' THEN t.value ELSE 0 END)
-    - SUM(CASE WHEN t.account = 'Imports' THEN t.value ELSE 0 END) AS trade_surplus_value
+  SUM(CASE WHEN t.account = 'Exports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END)
+    - SUM(CASE WHEN t.account = 'Imports' THEN SAFE_CAST(t.value AS FLOAT64) ELSE 0 END) AS trade_surplus_value
 FROM {TRADE} t
 JOIN {SERVICE} s ON t.code = s.code
 WHERE t.product_type = 'Services'
