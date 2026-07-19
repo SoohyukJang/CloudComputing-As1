@@ -7,23 +7,15 @@ from google.cloud import bigquery
 app = Flask(__name__)
 client = bigquery.Client()
 
-# ---------------------------------------------------------------------------
-# Dataset configuration.
-# The three CSVs from a1.zip must be loaded into this dataset as tables named:
-#   gsquarterlySeptember20, services_classification, country_classification
-# Set DATASET to "project.dataset" (or just "dataset" if same project).
-# Deployed separately from Task 1 (which lives in rmit-cloud-2026) so the two
-# App Engine apps don't overwrite each other's "default" service.
-# ---------------------------------------------------------------------------
-DATASET = "project-a899d2ee-9a1f-43f4-9dc.trade_data"  # project.dataset
+# Deployed separately from Task 1 (rmit-cloud-2026) so the two App Engine
+# apps don't fight over the same project's "default" service.
+DATASET = "project-a899d2ee-9a1f-43f4-9dc.trade_data"
 
 TRADE = f"`{DATASET}.gsquarterlySeptember20`"
 COUNTRY = f"`{DATASET}.country_classification`"
-SERVICE = f"`{DATASET}.services_classification`"  # join key column is `code`
+SERVICE = f"`{DATASET}.services_classification`"  # join key column is `code`, not country_code
 
-
-# Q1: Top 10 time slots (year+month) by total trade value (imports + exports).
-# time_ref in this dataset is a YYYYMM string; value is a string too, hence SAFE_CAST.
+# time_ref and value are stored as strings in this dataset, hence SAFE_CAST throughout.
 Q1 = f"""
 SELECT
   time_ref,
@@ -35,8 +27,6 @@ ORDER BY trade_value DESC
 LIMIT 10
 """
 
-# Q2: Top 40 countries by trade DEFICIT (imports - exports) of GOODS,
-# years 2013-2015, status = 'F'. Deficit = imports - exports.
 Q2 = f"""
 SELECT
   c.country_label AS country_label,
@@ -55,8 +45,6 @@ ORDER BY trade_deficit_value DESC
 LIMIT 40
 """
 
-# Q3: Top 25 SERVICES by trade SURPLUS (exports - imports), restricted to
-# the Q1 time slots AND the Q2 countries.
 Q3 = f"""
 WITH top_periods AS (
   SELECT time_ref
