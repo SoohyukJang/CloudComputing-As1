@@ -7,15 +7,12 @@ from google.cloud import bigquery
 app = Flask(__name__)
 client = bigquery.Client()
 
-# Deployed separately from Task 1 (rmit-cloud-2026) so the two App Engine
-# apps don't fight over the same project's "default" service.
 DATASET = "project-a899d2ee-9a1f-43f4-9dc.trade_data"
 
 TRADE = f"`{DATASET}.gsquarterlySeptember20`"
 COUNTRY = f"`{DATASET}.country_classification`"
-SERVICE = f"`{DATASET}.services_classification`"  # join key column is `code`, not country_code
+SERVICE = f"`{DATASET}.services_classification`"
 
-# time_ref and value are stored as strings in this dataset, hence SAFE_CAST throughout.
 Q1 = f"""
 SELECT
   time_ref,
