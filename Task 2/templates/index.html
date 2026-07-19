@@ -1,48 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>COSC2980 Assignment 1 - Task 2: Trade Data (BigQuery)</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; color: #222; }
-    h1 { font-size: 1.4rem; }
-    h2 { margin-top: 2.5rem; font-size: 1.1rem; }
-    table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
-    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 0.9rem; }
-    th { background: #f2f2f2; }
-    tr:nth-child(even) { background: #fafafa; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COSC2980 Group 7 - Task 2: Trade Data (BigQuery)</title>
+<style>
+  :root {
+    --bg: #1e1e1e;
+    --card: #252526;
+    --border: #3c3c3c;
+    --accent: #58a6ff;
+    --text: #d4d4d4;
+    --muted: #8b949e;
+    --mono: ui-monospace, SFMono-Regular, Consolas, "JetBrains Mono", "Cascadia Code", monospace;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+  }
+  nav {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    position: sticky;
+    top: 0;
+  }
+  nav .brand { font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--accent); text-decoration: none; }
+  .container { max-width: 900px; margin: 24px auto; padding: 0 16px 48px; }
+  h2 { font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--text); margin-top: 40px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 16px 20px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 13px; }
+  th { font-family: var(--mono); font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: var(--bg); }
+  td { font-family: var(--sans); }
+  tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
+</style>
 </head>
 <body>
-  <h1>COSC2980 Assignment 1 - Task 2: Trade Data Analysis (BigQuery)</h1>
+<nav>
+  <a class="brand" href="{{ url_for('index') }}">COSC2980 Group 7 - Trade Data</a>
+</nav>
+<div class="container">
+  <h2>Q1: Top 10 time slots by trade value (imports + exports)</h2>
+  <div class="card">
+    <table>
+      <tr><th>time_ref</th><th>trade_value</th></tr>
+      {% for row in q1_rows %}
+      <tr><td>{{ row.time_ref }}</td><td>{{ "%.2f"|format(row.trade_value) }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
 
-  <h2>Q1: Top 10 time periods by total trade value (imports + exports)</h2>
-  <table>
-    <tr><th>time_ref</th><th>trade_value</th></tr>
-    {% for row in q1_rows %}
-    <tr><td>{{ row.time_ref }}</td><td>{{ "%.2f"|format(row.trade_value) }}</td></tr>
-    {% endfor %}
-  </table>
-
-  <h2>Q2: Top 40 countries by trade deficit (2013-2015, status = F)</h2>
-  <table>
-    <tr><th>country_label</th><th>product_type</th><th>trade_deficit_value</th><th>status</th></tr>
-    {% for row in q2_rows %}
-    <tr>
-      <td>{{ row.country_label }}</td>
-      <td>{{ row.product_type }}</td>
-      <td>{{ "%.2f"|format(row.trade_deficit_value) }}</td>
-      <td>{{ row.status }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+  <h2>Q2: Top 40 countries by trade deficit of goods (2013-2015, status = F)</h2>
+  <div class="card">
+    <table>
+      <tr><th>country_label</th><th>trade_deficit_value</th></tr>
+      {% for row in q2_rows %}
+      <tr>
+        <td>{{ row.country_label }}</td>
+        <td>{{ "%.2f"|format(row.trade_deficit_value) }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
 
   <h2>Q3: Top 25 services by trade surplus (Q1 periods &cap; Q2 countries)</h2>
-  <table>
-    <tr><th>service_label</th><th>trade_surplus_value</th></tr>
-    {% for row in q3_rows %}
-    <tr><td>{{ row.service_label }}</td><td>{{ "%.2f"|format(row.trade_surplus_value) }}</td></tr>
-    {% endfor %}
-  </table>
+  <div class="card">
+    <table>
+      <tr><th>service_label</th><th>trade_surplus_value</th></tr>
+      {% for row in q3_rows %}
+      <tr><td>{{ row.service_label }}</td><td>{{ "%.2f"|format(row.trade_surplus_value) }}</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
 </body>
 </html>
