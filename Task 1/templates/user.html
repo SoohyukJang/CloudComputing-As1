@@ -14,15 +14,19 @@
 
   {% if is_owner %}
   <div class="card">
-    <h3 style="margin-top:0;">Change password</h3>
-    {% if error %}<div class="error">{{ error }}</div>{% endif %}
-    <form method="post" action="{{ url_for('change_password', user_id=profile_user['id']) }}">
-      <label>Old password</label>
-      <input type="password" name="old_password" required>
-      <label>New password</label>
-      <input type="password" name="new_password" required>
-      <button class="btn" type="submit">Change</button>
-    </form>
+    <details class="password-toggle"{% if error %} open{% endif %}>
+      <summary class="btn">Change Password</summary>
+      <div class="password-form">
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+        <form method="post" action="{{ url_for('change_password', user_id=profile_user['id']) }}">
+          <label>Old password</label>
+          <input type="password" name="old_password" required>
+          <label>New password</label>
+          <input type="password" name="new_password" required>
+          <button class="btn" type="submit">Change</button>
+        </form>
+      </div>
+    </details>
   </div>
   {% endif %}
 
